@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#83c96b" />
+    <meta name="description" content="猪了个猪：原创农场风叠层三消小游戏。点击未被遮挡的卡牌，凑齐三张相同图案。" />
+    <title>猪了个猪</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='29' fill='%23fb83a1'/%3E%3Cellipse cx='32' cy='39' rx='18' ry='13' fill='%23ffb3c4'/%3E%3Ccircle cx='25' cy='39' r='3' fill='%23ad4b65'/%3E%3Ccircle cx='39' cy='39' r='3' fill='%23ad4b65'/%3E%3C/svg%3E" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="game-shell">
+      <header class="topbar">
+        <div class="brand"><span class="brand-mark" aria-hidden="true">🐽</span><span>猪了个猪</span></div>
+        <div class="top-actions">
+          <button id="help-button" class="round-button" type="button" aria-label="玩法说明">?</button>
+          <button id="sound-button" class="round-button" type="button" aria-label="关闭声音" aria-pressed="true">🔊</button>
+        </div>
+      </header>
+
+      <section class="level-banner" aria-label="当前关卡">
+        <div class="mascot-wrap"><span class="mascot-fallback" aria-hidden="true">🐷</span><img id="mascot-image" class="mascot-image" alt="挥手的小猪" hidden /></div>
+        <div class="level-copy">
+          <span id="level-kicker" class="eyebrow">第 1 关 · 新手猪圈</span>
+          <h1 id="level-title">凑齐三张，清空猪圈！</h1>
+          <p id="level-tip">点选亮起的卡牌，放进下方的 7 格槽。</p>
+        </div>
+        <button id="menu-button" class="menu-button" type="button" aria-label="关卡菜单">☰</button>
+      </section>
+
+      <section class="board-section" aria-label="卡牌区域">
+        <div class="board-heading"><span id="remaining-label">剩余 18 张</span><span id="day-label">教学关</span></div>
+        <div class="board-frame">
+          <div id="board" class="board" role="group" aria-label="叠层卡牌"></div>
+          <div id="spark-layer" class="spark-layer" aria-hidden="true"></div>
+        </div>
+      </section>
+
+      <section class="play-footer">
+        <div id="aside-wrap" class="aside-wrap" hidden><span class="aside-label">暂放区</span><div id="aside" class="aside" aria-label="暂放的卡牌"></div></div>
+        <div class="tray-heading"><span>收纳槽</span><span id="tray-count">0 / 7</span></div>
+        <div id="tray" class="tray" role="group" aria-label="七格收纳槽"></div>
+        <div class="tools" aria-label="道具">
+          <button id="tool-undo" class="tool-button" type="button"><span class="tool-icon">↶</span><span>撤回</span><small>1 次</small></button>
+          <button id="tool-move" class="tool-button" type="button"><span class="tool-icon">⇧</span><span>移出</span><small>1 次</small></button>
+          <button id="tool-shuffle" class="tool-button" type="button"><span class="tool-icon">⤨</span><span>洗牌</span><small>1 次</small></button>
+        </div>
+      </section>
+      <p id="status-line" class="status-line" role="status" aria-live="polite">每 3 张相同卡牌会自动消除</p>
+    </main>
+
+    <div id="dialog-backdrop" class="dialog-backdrop" hidden>
+      <section class="dialog" role="dialog" aria-modal="true" aria-labelledby="dialog-title">
+        <div id="dialog-art" class="dialog-art" aria-hidden="true">🐷</div>
+        <h2 id="dialog-title"></h2>
+        <p id="dialog-message"></p>
+        <div id="dialog-actions" class="dialog-actions"></div>
+      </section>
+    </div>
+    <script type="module" src="./main.mjs"></script>
+  </body>
+</html>
