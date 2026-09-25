@@ -32,3 +32,14 @@ jobs:
       - name: Deploy
         id: deployment
         uses: actions/deploy-pages@v4
+      - name: Verify published game
+        env:
+          PAGE_URL: ${{ steps.deployment.outputs.page_url }}
+        run: |
+          set -euo pipefail
+          base="${PAGE_URL%/}"
+          curl --fail --location --silent --show-error --retry 12 --retry-delay 5 --retry-all-errors "$base/" -o /tmp/pig-game-index.html
+          grep -q '<title>猪了个猪</title>' /tmp/pig-game-index.html
+          for asset in styles.css main.mjs engine.mjs audio.mjs assets/pig-mascot.png assets/icons-atlas.png assets/farm-bg.png; do
+            curl --fail --location --silent --show-error --retry 5 --retry-delay 3 --retry-all-errors --output /dev/null "$base/$asset"
+          done

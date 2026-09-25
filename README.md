@@ -2,6 +2,8 @@
 
 原创猪主题的单人网页叠层三消游戏。无需安装依赖或构建，网页文件位于 `dist/`。
 
+在线游玩：[GitHub Pages](https://xray-bug.github.io/zhu-le-ge-zhu/)
+
 ## 本地运行
 
 在本目录运行：
