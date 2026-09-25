@@ -86,6 +86,21 @@ h1 { margin: 6px 0 3px; color: #35683f; font-size: clamp(1.12rem, 5vw, 1.42rem);
 .dialog-actions { display: grid; gap: 10px; }
 .dialog-actions button { min-height: 46px; border: 2px solid #af6b36; border-radius: 13px; background: #ffd06e; box-shadow: 0 4px 0 #b47942; color: #6f4d2d; font-weight: 1000; }
 .dialog-actions button.secondary { border-color: #88aa86; background: #e9f2d8; box-shadow: 0 4px 0 #88aa86; color: #496b4e; }
+.author-backdrop { position: fixed; z-index: 300; inset: 0; display: grid; place-items: center; padding: 12px; background: rgba(18, 42, 28, .75); backdrop-filter: blur(8px); }
+.author-panel { width: min(100%, 420px); max-height: calc(100dvh - 24px); overflow-y: auto; padding: 19px; border: 3px solid #476b53; border-radius: 20px; background: #f7f9ec; box-shadow: 0 18px 60px rgba(11, 35, 19, .45); }
+.author-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.author-eyebrow { color: #6e816f; font-size: .7rem; font-weight: 900; letter-spacing: .08em; }
+.author-heading h2 { margin: 3px 0 0; color: #274f35; font-size: 1.35rem; }
+.author-close { flex: 0 0 auto; width: 34px; height: 34px; border: 1px solid #9db5a1; border-radius: 9px; background: #e4ecdc; color: #355c40; font-size: 1.5rem; line-height: 1; }
+#author-description { margin: 12px 0; color: #546b58; font-size: .8rem; line-height: 1.5; }
+.author-state { margin: 0 0 12px; padding: 8px 10px; border-radius: 9px; background: #e6efdc; color: #365944; font-size: .78rem; font-weight: 800; }
+.author-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.author-actions button { min-width: 0; min-height: 65px; padding: 8px 10px; border: 1px solid #8fb79c; border-radius: 11px; background: #fffef3; color: #2e593b; text-align: left; box-shadow: 0 2px 0 #a5c6a6; }
+.author-actions button:hover:not(:disabled) { background: #edf8df; }
+.author-actions button:disabled { cursor: not-allowed; opacity: .45; }
+.author-actions strong, .author-actions small { display: block; }
+.author-actions strong { font-size: .88rem; }
+.author-actions small { margin-top: 3px; color: #65806b; font-size: .68rem; line-height: 1.3; }
 .burst { position: absolute; width: 10px; height: 10px; border-radius: 3px; background: var(--burst-color, #ffd16d); animation: burst .55s ease-out forwards; }
 @keyframes pop-in { from { opacity: 0; transform: scale(.75) rotate(-6deg); } to { opacity: 1; transform: scale(1); } }
 @keyframes dialog-in { from { opacity: 0; transform: translateY(18px) scale(.9); } to { opacity: 1; transform: translateY(0) scale(1); } }
@@ -99,6 +114,9 @@ h1 { margin: 6px 0 3px; color: #35683f; font-size: clamp(1.12rem, 5vw, 1.42rem);
   .mascot-fallback { font-size: 3.5rem; }
   .level-copy p { font-size: .8rem; }
   .tile { border-width: 1.5px; border-radius: 7px; }
+  .author-panel { padding: 14px; }
+  .author-actions { grid-template-columns: 1fr; }
+  .author-actions button { min-height: 52px; }
 }
 @media (min-width: 600px) { .game-shell { border-left: 8px solid #6ba45e; border-right: 8px solid #6ba45e; } }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; scroll-behavior: auto !important; } }

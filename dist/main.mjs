@@ -1,5 +1,6 @@
 import { TILE_TYPES, applyAction, chinaDate, createGame, isExposed, isValidGame } from './engine.mjs';
 import { playSound, setSoundEnabled, unlockAudio } from './audio.mjs';
+import { applyAuthorAction, isAuthorShortcut } from './author.mjs';
 
 const $ = selector => document.querySelector(selector);
 const board = $('#board');
@@ -13,6 +14,8 @@ const dialogMessage = $('#dialog-message');
 const dialogArt = $('#dialog-art');
 const dialogActions = $('#dialog-actions');
 const soundButton = $('#sound-button');
+const authorBackdrop = $('#author-backdrop');
+const authorState = $('#author-state');
 const storageGame = 'piggy-puzzle-run-v1';
 const storageMeta = 'piggy-puzzle-meta-v1';
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
@@ -36,6 +39,7 @@ if (game.lastMove && !isValidGame(game.lastMove)) game.lastMove = null;
 if (game.level === 'daily' && game.date !== chinaDate() && game.status !== 'playing') game = createGame('daily');
 let busy = false;
 let lastFocus = null;
+let authorReturnFocus = null;
 setSoundEnabled(meta.soundOn);
 
 const mascot = $('#mascot-image');
@@ -250,6 +254,62 @@ function processEvents(events) {
   }
 }
 
+function updateAuthorPanel() {
+  const remaining = game.tiles.filter(tile => tile.status !== 'gone').length;
+  authorState.textContent = `${game.level === 'tutorial' ? '教学关' : `每日挑战 ${game.date}`} · ${game.status === 'playing' ? '进行中' : game.status === 'won' ? '已通关' : '已失败'} · 未消除 ${remaining} 张`;
+  const disabled = {
+    'quick-win': game.status === 'won',
+    'clear-tray': game.status === 'won' || game.tray.length === 0,
+    'reset-tools': game.status === 'won' || (!Object.values(game.tools).some(Boolean) && !game.reviveUsed),
+    'simulate-loss': game.status !== 'playing',
+  };
+  for (const button of authorBackdrop.querySelectorAll('[data-author-action]')) {
+    button.disabled = Boolean(disabled[button.dataset.authorAction]);
+  }
+}
+
+function openAuthorPanel() {
+  if (busy) return;
+  if (!backdrop.hidden) closeDialog();
+  authorReturnFocus = document.activeElement;
+  updateAuthorPanel();
+  $('.game-shell').inert = true;
+  backdrop.inert = true;
+  authorBackdrop.hidden = false;
+  $('#author-close').focus();
+}
+
+function closeAuthorPanel(restoreOutcome = true) {
+  if (authorBackdrop.hidden) return;
+  authorBackdrop.hidden = true;
+  $('.game-shell').inert = false;
+  backdrop.inert = false;
+  if (authorReturnFocus?.isConnected) authorReturnFocus.focus();
+  authorReturnFocus = null;
+  if (restoreOutcome && game.status !== 'playing') showOutcome();
+}
+
+function runAuthorAction(type) {
+  closeAuthorPanel(false);
+  if (type === 'restart') return startGame(game.level, game.date ?? chinaDate());
+  if (type === 'tutorial' || type === 'daily') return startGame(type);
+  const result = applyAuthorAction(game, type);
+  if (result.state === game) {
+    say('当前牌局无法执行这项操作。');
+    if (game.status !== 'playing') showOutcome();
+    return;
+  }
+  game = result.state;
+  save();
+  render();
+  if (result.events.some(event => event.type === 'won' || event.type === 'lost')) {
+    processEvents(result.events);
+  } else {
+    say({ 'clear-tray': '收纳槽已清空。', 'reset-tools': '道具和复活次数已恢复。' }[type]);
+    if (game.status !== 'playing') showOutcome();
+  }
+}
+
 async function selectTile(id, element) {
   if (busy || !backdrop.hidden) return;
   unlockAudio();
@@ -324,7 +384,34 @@ $('#menu-button').addEventListener('click', () => {
 backdrop.addEventListener('click', event => {
   if (event.target === backdrop && game.status === 'playing') closeDialog();
 });
+$('#author-close').addEventListener('click', () => closeAuthorPanel());
+authorBackdrop.addEventListener('click', event => {
+  if (event.target === authorBackdrop) closeAuthorPanel();
+});
+authorBackdrop.querySelector('.author-actions').addEventListener('click', event => {
+  const button = event.target.closest('button[data-author-action]');
+  if (button && !button.disabled) runAuthorAction(button.dataset.authorAction);
+});
 document.addEventListener('keydown', event => {
+  if (isAuthorShortcut(event)) {
+    event.preventDefault();
+    if (authorBackdrop.hidden) openAuthorPanel();
+    else closeAuthorPanel();
+    return;
+  }
+  if (!authorBackdrop.hidden) {
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      closeAuthorPanel();
+    } else if (event.key === 'Tab') {
+      const focusable = [...authorBackdrop.querySelectorAll('button:not(:disabled)')];
+      const first = focusable[0];
+      const last = focusable.at(-1);
+      if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+      else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+    }
+    return;
+  }
   if (event.key === 'Escape' && !backdrop.hidden && game.status === 'playing') closeDialog();
 });
 save();

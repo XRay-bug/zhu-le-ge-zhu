@@ -58,6 +58,28 @@
         <div id="dialog-actions" class="dialog-actions"></div>
       </section>
     </div>
+    <div id="author-backdrop" class="author-backdrop" hidden>
+      <section class="author-panel" role="dialog" aria-modal="true" aria-labelledby="author-title" aria-describedby="author-description">
+        <div class="author-heading">
+          <div>
+            <span class="author-eyebrow">仅供作者测试</span>
+            <h2 id="author-title">作者修改器</h2>
+          </div>
+          <button id="author-close" class="author-close" type="button" aria-label="关闭作者修改器">×</button>
+        </div>
+        <p id="author-description">快捷键 Ctrl + Alt + Shift + P 可开启或关闭。操作会修改当前本地牌局。</p>
+        <p id="author-state" class="author-state"></p>
+        <div class="author-actions">
+          <button type="button" data-author-action="quick-win"><strong>快速通关</strong><small>触发正常结算并记录通关</small></button>
+          <button type="button" data-author-action="clear-tray"><strong>清空收纳槽</strong><small>槽内牌视为已消除</small></button>
+          <button type="button" data-author-action="reset-tools"><strong>恢复道具</strong><small>重置三种道具和复活次数</small></button>
+          <button type="button" data-author-action="simulate-loss"><strong>模拟失败</strong><small>填满七格并显示失败结算</small></button>
+          <button type="button" data-author-action="restart"><strong>重开本关</strong><small>重新生成当前牌局</small></button>
+          <button type="button" data-author-action="tutorial"><strong>进入教学关</strong><small>直接切换到第一关</small></button>
+          <button type="button" data-author-action="daily"><strong>进入今日挑战</strong><small>直接切换到今日牌局</small></button>
+        </div>
+      </section>
+    </div>
     <script type="module" src="./main.mjs"></script>
   </body>
 </html>

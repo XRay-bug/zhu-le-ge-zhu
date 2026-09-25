@@ -29,7 +29,11 @@ python -m http.server 4173 --bind 127.0.0.1 --directory dist
 ## 验证
 
 ```powershell
-node --test tests/engine.test.mjs
+node --test tests/*.test.mjs
 ```
+
+## 作者修改器
+
+在游戏页面按 **Ctrl + Alt + Shift + P** 打开或关闭隐藏测试面板。可快速通关、清空收纳槽、恢复道具、模拟失败、重开关卡，以及直接切换教学关或今日挑战。按 Esc 也可关闭面板。快速通关会触发正常结算，并写入当前浏览器的通关记录；这些操作只影响本机保存的牌局。
 
 角色、背景和卡牌图标使用原创生成图像；短音效和背景旋律由 Web Audio 在浏览器内合成。没有在线排行榜、账号、广告或分享换道具。
